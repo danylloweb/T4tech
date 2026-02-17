@@ -12,7 +12,9 @@ or Use the make command to start with docker
 ```bash
 make up
 ```
-
+```bash
+depois da instalação importe o postman_collection.json no postman
+```
 ## Introdução
 
 ## Tabela de conteudo
