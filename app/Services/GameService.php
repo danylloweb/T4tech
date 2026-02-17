@@ -79,6 +79,18 @@ class GameService extends AppService
 
             foreach ($response['data'] as $gameData) {
                 try {
+                    $datetime = null;
+                    if (!empty($gameData['datetime'])) {
+                        try {
+                            $datetime = \Carbon\Carbon::parse($gameData['datetime'])->format('Y-m-d H:i:s');
+                        } catch (\Exception $e) {
+                            Log::warning('Invalid datetime format', [
+                                'game_id' => $gameData['id'] ?? 'unknown',
+                                'datetime' => $gameData['datetime']
+                            ]);
+                        }
+                    }
+
                     $this->repository->skipPresenter()->create([
                         'date'                       => $gameData['date'],
                         'season'                     => $gameData['season'],
@@ -89,7 +101,7 @@ class GameService extends AppService
                         'postponed'                  => $gameData['postponed'] ?? false,
                         'home_team_score'            => $gameData['home_team_score'] ?? null,
                         'visitor_team_score'         => $gameData['visitor_team_score'] ?? null,
-                        'datetime'                   => $gameData['datetime'] ?? null,
+                        'datetime'                   => $datetime,
                         'home_q1'                    => $gameData['home_q1'] ?? null,
                         'home_q2'                    => $gameData['home_q2'] ?? null,
                         'home_q3'                    => $gameData['home_q3'] ?? null,
@@ -97,7 +109,7 @@ class GameService extends AppService
                         'home_ot1'                   => $gameData['home_ot1'] ?? null,
                         'home_ot2'                   => $gameData['home_ot2'] ?? null,
                         'home_ot3'                   => $gameData['home_ot3'] ?? null,
-                        'home_timeouts_remaining'    => $gameData['home_timeouts_remaining'] ?? null,
+                        'home_timeouts_remaining'    => isset($gameData['home_timeouts_remaining']) && $gameData['home_timeouts_remaining'] >= 0 ? $gameData['home_timeouts_remaining'] : null,
                         'home_in_bonus'              => $gameData['home_in_bonus'] ?? null,
                         'visitor_q1'                 => $gameData['visitor_q1'] ?? null,
                         'visitor_q2'                 => $gameData['visitor_q2'] ?? null,
@@ -106,7 +118,7 @@ class GameService extends AppService
                         'visitor_ot1'                => $gameData['visitor_ot1'] ?? null,
                         'visitor_ot2'                => $gameData['visitor_ot2'] ?? null,
                         'visitor_ot3'                => $gameData['visitor_ot3'] ?? null,
-                        'visitor_timeouts_remaining' => $gameData['visitor_timeouts_remaining'] ?? null,
+                        'visitor_timeouts_remaining' => isset($gameData['visitor_timeouts_remaining']) && $gameData['visitor_timeouts_remaining'] >= 0 ? $gameData['visitor_timeouts_remaining'] : null,
                         'visitor_in_bonus'           => $gameData['visitor_in_bonus'] ?? null,
                         'ist_stage'                  => $gameData['ist_stage'] ?? null,
                         'home_team_id'               => $gameData['home_team']['id'] ?? null,
@@ -116,7 +128,8 @@ class GameService extends AppService
                 } catch (\Exception $e) {
                     Log::error('Error saving game', [
                         'game_id' => $gameData['id'] ?? 'unknown',
-                        'error'   => $e->getMessage()
+                        'error'   => $e->getMessage(),
+                        'data'    => $gameData
                     ]);
                     $errors[] = [
                         'game_id' => $gameData['id'] ?? 'unknown',

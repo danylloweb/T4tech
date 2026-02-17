@@ -88,20 +88,5 @@ class PlayersController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id): JsonResponse
-    {
-        try {
-            $player = $this->service->find($id);
-            $this->authorize('delete', $player);
-            $this->service->delete($id);
-            return response()->json(['message' => 'Jogador deletado com sucesso'], 200);
-        } catch (Exception $exception) {
-            return $this->sendBadResponse($exception);
-        }
-    }
 
 }

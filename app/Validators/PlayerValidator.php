@@ -20,7 +20,7 @@ class PlayerValidator extends LaravelValidator
     protected $rules = [
         ValidatorInterface::RULE_CREATE => [
             'first_name'    => 'sometimes|required|string|max:100',
-            'last_name'     => 'sometimes|required|string|max:100',
+            'last_name'     => 'sometimes|string|max:100',
             'position'      => 'nullable|string|max:10',
             'height'        => 'nullable|string|max:20',
             'weight'        => 'nullable|string|max:20',
@@ -28,8 +28,8 @@ class PlayerValidator extends LaravelValidator
             'college'       => 'nullable|string|max:150',
             'country'       => 'nullable|string|max:100',
             'draft_year'    => 'nullable|integer|min:1900',
-            'draft_round'   => 'nullable|integer|min:1',
-            'draft_number'  => 'nullable|integer|min:1',
+            'draft_round'   => 'nullable|integer',
+            'draft_number'  => 'nullable|integer',
             'team_id'       => 'nullable|integer|exists:teams,id'
         ],
         ValidatorInterface::RULE_UPDATE => [],
@@ -62,9 +62,7 @@ class PlayerValidator extends LaravelValidator
         'draft_year.integer'  => 'O ano do draft deve ser um número inteiro.',
         'draft_year.min'      => 'O ano do draft deve ser no mínimo 1900.',
         'draft_round.integer' => 'A rodada do draft deve ser um número inteiro.',
-        'draft_round.min'     => 'A rodada do draft deve ser no mínimo 1.',
         'draft_number.integer'=> 'O número do draft deve ser um número inteiro.',
-        'draft_number.min'    => 'O número do draft deve ser no mínimo 1.',
         'team_id.integer'     => 'O ID do time deve ser um número inteiro.',
         'team_id.exists'      => 'O time selecionado não existe.',
     ];

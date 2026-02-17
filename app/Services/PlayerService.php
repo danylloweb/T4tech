@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Criterias\AppRequestCriteria;
+use App\Criterias\FilterByTeamIdCriteria;
 use App\Integrations\BallDontLieIntegration;
 use App\Repositories\PlayerRepository;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Prettus\Repository\Exceptions\RepositoryException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 /**
  * PlayerService
@@ -42,6 +45,7 @@ class PlayerService extends AppService
     {
         return $this->repository
             ->resetCriteria()
+            ->pushCriteria(app(FilterByTeamIdCriteria::class))
             ->pushCriteria(app(AppRequestCriteria::class))
             ->paginate($limit);
     }
@@ -53,17 +57,15 @@ class PlayerService extends AppService
      */
     public function importPlayers(): array
     {
-        $cursor   = null;
+        $cursor   = 25;
         $imported = 0;
         $errors   = [];
 
         do {
-            // Build endpoint with cursor if available
-            $endpoint = "players?per_page=100";
+            $endpoint = "players";
             if ($cursor) {
-                $endpoint .= "&cursor={$cursor}";
+                $endpoint .= "?cursor={$cursor}";
             }
-
             $response = $this->integration->send('GET', $endpoint);
 
             if (isset($response['error']) && $response['error']) {
@@ -80,7 +82,7 @@ class PlayerService extends AppService
                 try {
                     $this->repository->skipPresenter()->create([
                         'first_name'    => $playerData['first_name'],
-                        'last_name'     => $playerData['last_name'],
+                        'last_name'     => $playerData['last_name']?? null,
                         'position'      => $playerData['position'] ?? null,
                         'height'        => $playerData['height'] ?? null,
                         'weight'        => $playerData['weight'] ?? null,
@@ -96,17 +98,21 @@ class PlayerService extends AppService
                 } catch (\Exception $e) {
                     Log::error('Error saving player', [
                         'player_id' => $playerData['id'] ?? 'unknown',
-                        'error'     => $e->getMessage()
+                        'error'     => $e->getMessage(),
+                        'body'      => $playerData
                     ]);
                     $errors[] = [
                         'player_id' => $playerData['id'] ?? 'unknown',
-                        'error'     => $e->getMessage()
+                        'error'     => $e->getMessage(),
+
                     ];
                 }
             }
-            sleep(2);
-            $cursor = $response['meta']['next_cursor'] ?? null;
 
+            $cursor = $response['meta']['next_cursor'] ?? null;
+            if ($cursor > 2000){
+                $cursor = null;
+            }
         } while ($cursor !== null);
 
         return [

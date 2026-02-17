@@ -3,12 +3,12 @@
 
 ## Setup
 
-Use the make command to start
+Use the make command to start installation
 
 ```bash
 make install
 ```
-or
+or Use the make command to start with docker
 ```bash
 make up
 ```

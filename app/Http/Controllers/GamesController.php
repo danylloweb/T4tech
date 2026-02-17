@@ -88,20 +88,6 @@ class GamesController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id): JsonResponse
-    {
-        try {
-            $game = $this->service->find($id);
-            $this->authorize('delete', $game);
-            $this->service->delete($id);
-            return response()->json(['message' => 'Jogo deletado com sucesso'], 200);
-        } catch (Exception $exception) {
-            return $this->sendBadResponse($exception);
-        }
-    }
+
 
 }

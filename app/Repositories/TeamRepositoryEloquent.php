@@ -16,6 +16,21 @@ use App\Validators\TeamValidator;
  */
 class TeamRepositoryEloquent extends BaseRepository implements TeamRepository
 {
+
+    protected $fieldSearchable = [
+        'full_name' => 'like',
+        'abbreviation'  => 'like',
+    ];
+
+    /**
+     * Regras para busca
+     *
+     * @var array
+     */
+    protected $fieldsRules = [
+        'full_name' => ['string', 'max:50'],
+        'abbreviation'  => ['string', 'max:3'],
+    ];
     /**
      * Specify Model class name
      *

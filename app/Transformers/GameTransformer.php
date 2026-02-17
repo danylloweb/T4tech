@@ -21,11 +21,11 @@ class GameTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Game $model)
+    public function transform(Game $model): array
     {
         return [
             'id'                         => (int) $model->id,
-            'date'                       => $model->date?->format('Y-m-d'),
+            'date'                       => $model->date,
             'season'                     => $model->season,
             'status'                     => $model->status,
             'period'                     => $model->period,
@@ -34,7 +34,7 @@ class GameTransformer extends TransformerAbstract
             'postponed'                  => $model->postponed,
             'home_team_score'            => $model->home_team_score,
             'visitor_team_score'         => $model->visitor_team_score,
-            'datetime'                   => $model->datetime?->format('Y-m-d H:i:s'),
+            'datetime'                   => $model->datetime,
             'home_q1'                    => $model->home_q1,
             'home_q2'                    => $model->home_q2,
             'home_q3'                    => $model->home_q3,
@@ -56,9 +56,8 @@ class GameTransformer extends TransformerAbstract
             'ist_stage'                  => $model->ist_stage,
             'home_team_id'               => $model->home_team_id,
             'visitor_team_id'            => $model->visitor_team_id,
-            'created_at'                 => $model->created_at,
-            'updated_at'                 => $model->updated_at,
-            'deleted_at'                 => $model->deleted_at
+            'created_at'                 => $model->created_at->toDateTimeString(),
+            'updated_at'                 => $model->updated_at->toDateTimeString()
         ];
     }
 

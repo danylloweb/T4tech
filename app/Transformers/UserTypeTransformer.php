@@ -15,19 +15,15 @@ class UserTypeTransformer extends TransformerAbstract
     /**
      * Transform the UserType entity.
      *
-     * @param \App\Entities\UserType $model
+     * @param UserType $model
      *
      * @return array
      */
-    public function transform(UserType $model)
+    public function transform(UserType $model):array
     {
         return [
-            'id'         => (int) $model->id,
-
-            /* place your other model properties here */
-
-            'created_at' => $model->created_at,
-            'updated_at' => $model->updated_at
+            'id'   => (int) $model->id,
+            'name' => $model->name,
         ];
     }
 }

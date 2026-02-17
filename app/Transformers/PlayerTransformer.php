@@ -20,7 +20,7 @@ class PlayerTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Player $model)
+    public function transform(Player $model):array
     {
         return [
             'id'            => (int) $model->id,

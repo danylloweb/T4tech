@@ -40,8 +40,8 @@ class TeamsController extends Controller
      */
     public function __construct(TeamService $service, TeamValidator $validator)
     {
-        $this->service = $service;
-        $this->validator  = $validator;
+        $this->service   = $service;
+        $this->validator = $validator;
     }
 
     /**
@@ -82,22 +82,6 @@ class TeamsController extends Controller
     {
         try {
             return response()->json($this->service->update($request->all(), $id));
-        } catch (Exception $exception) {
-            return $this->sendBadResponse($exception);
-        }
-    }
-
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id): JsonResponse
-    {
-        try {
-            $team = $this->service->find($id);
-            $this->authorize('delete', $team);
-            $this->service->delete($id);
-            return response()->json(['message' => 'Time deletado com sucesso'], 200);
         } catch (Exception $exception) {
             return $this->sendBadResponse($exception);
         }

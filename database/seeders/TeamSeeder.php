@@ -25,17 +25,9 @@ class TeamSeeder extends Seeder
     {
         $output = new ConsoleOutput();
         $output->writeln('<info>Starting Teams import from BallDontLie API...</info>');
-
-        $progressBar = new ProgressBar($output);
-        $progressBar->start();
-
         $result = $this->teamService->importTeams();
-
-        $progressBar->finish();
         $output->writeln('');
-
         $output->writeln("<info>Teams imported successfully: {$result['imported']}</info>");
-
         if (!empty($result['errors'])) {
             $output->writeln("<error>Errors occurred: " . count($result['errors']) . "</error>");
         }

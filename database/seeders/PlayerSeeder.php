@@ -25,17 +25,9 @@ class PlayerSeeder extends Seeder
     {
         $output = new ConsoleOutput();
         $output->writeln('<info>Starting Players import from BallDontLie API...</info>');
-
-        $progressBar = new ProgressBar($output);
-        $progressBar->start();
-
         $result = $this->playerService->importPlayers();
-
-        $progressBar->finish();
         $output->writeln('');
-
         $output->writeln("<info>Players imported successfully: {$result['imported']}</info>");
-
         if (!empty($result['errors'])) {
             $output->writeln("<error>Errors occurred: " . count($result['errors']) . "</error>");
         }

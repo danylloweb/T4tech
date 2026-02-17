@@ -16,6 +16,19 @@ use App\Validators\GameValidator;
  */
 class GameRepositoryEloquent extends BaseRepository implements GameRepository
 {
+
+    protected $fieldSearchable = [
+        'season' => 'like',
+    ];
+
+    /**
+     * Regras para busca
+     *
+     * @var array
+     */
+    protected $fieldsRules = [
+        'season' => ['numeric'],
+    ];
     /**
      * Specify Model class name
      *

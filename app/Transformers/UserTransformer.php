@@ -15,19 +15,14 @@ class UserTransformer extends TransformerAbstract
     /**
      * Transform the User entity.
      *
-     * @param \App\Entities\User $model
+     * @param User $model
      *
      * @return array
      */
-    public function transform(User $model)
+    public function transform(User $model):array
     {
         return [
             'id'         => (int) $model->id,
-
-            /* place your other model properties here */
-
-            'created_at' => $model->created_at,
-            'updated_at' => $model->updated_at
         ];
     }
 }

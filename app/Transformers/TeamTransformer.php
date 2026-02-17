@@ -19,7 +19,7 @@ class TeamTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(Team $model)
+    public function transform(Team $model): array
     {
         return [
             'id'           => (int) $model->id,

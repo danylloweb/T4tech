@@ -9,6 +9,7 @@ install:
 	make seed
 	make restart
 	make ps
+	make test-unit
 
 up:
 	docker-compose up -d
@@ -33,6 +34,9 @@ composer-update:
 
 migrate:
 	docker-compose run --rm t4tech-api php artisan migrate --force
+
+migrate-refresh:
+	docker-compose run --rm t4tech-api php artisan migrate:refresh --force
 
 seed:
 	docker-compose run --rm t4tech-api php artisan db:seed --force
@@ -64,3 +68,6 @@ cache-clear:
 restart:
 	docker-compose restart t4tech-api
 	make cache-clear
+
+test-unit:
+	docker-compose run --rm t4tech-api php artisan test

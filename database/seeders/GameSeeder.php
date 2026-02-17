@@ -26,19 +26,10 @@ class GameSeeder extends Seeder
     {
         $output = new ConsoleOutput();
         $season = 2024;
-
         $output->writeln("<info>Starting Games import from BallDontLie API for season {$season}...</info>");
-
-        $progressBar = new ProgressBar($output);
-        $progressBar->start();
-
         $result = $this->gameService->importGames($season);
-
-        $progressBar->finish();
         $output->writeln('');
-
         $output->writeln("<info>Games imported successfully: {$result['imported']}</info>");
-
         if (!empty($result['errors'])) {
             $output->writeln("<error>Errors occurred: " . count($result['errors']) . "</error>");
         }

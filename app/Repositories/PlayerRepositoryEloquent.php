@@ -16,6 +16,25 @@ use App\Validators\PlayerValidator;
  */
 class PlayerRepositoryEloquent extends BaseRepository implements PlayerRepository
 {
+    protected $fieldSearchable = [
+        'first_name' => 'like',
+        'last_name'  => 'like',
+        'country'    => 'like',
+        'draft_year' => 'like',
+    ];
+
+    /**
+     * Regras para busca
+     *
+     * @var array
+     */
+    protected $fieldsRules = [
+        'first_name' => ['string', 'max:50'],
+        'last_name'  => ['string', 'max:50'],
+        'country'    => ['string', 'max:50'],
+        'draft_year' => ['numeric'],
+    ];
+
     /**
      * Specify Model class name
      *

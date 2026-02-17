@@ -70,14 +70,19 @@ class Controller extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
      * @param int $id
+     * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id,Request $request): JsonResponse
     {
         try {
-            return response()->json($this->service->delete($id));
+            $user = $request->user();
+            if ($user->isAdmin()){
+                return response()->json($this->service->delete($id));
+            }else{
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
         } catch (Exception $exception) {
             return $this->sendBadResponse($exception,404);
         }

@@ -15,8 +15,8 @@ return new class extends Migration
 	{
 		Schema::create('players', function(Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name', 100);
-            $table->string('last_name', 100);
+            $table->string('first_name', 100)->index();
+            $table->string('last_name', 100)->nullable();
             $table->string('position', 10)->nullable();
             $table->string('height', 20)->nullable();
             $table->string('weight', 20)->nullable();
