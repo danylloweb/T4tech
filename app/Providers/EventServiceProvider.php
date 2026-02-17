@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Entities\Game;
+use App\Entities\Player;
+use App\Entities\Team;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -35,7 +38,33 @@ class EventServiceProvider extends ServiceProvider
      */
     private function afterCreatedModels()
     {
-
+        Game::created(function ($game) {
+            Cache::tags('games')->flush();
+        });
+        Game::updated(function ($game) {
+            Cache::tags('games')->flush();
+        });
+        Game::deleted(function ($game) {
+            Cache::tags('games')->flush();
+        });
+        Player::created(function ($player) {
+           Cache::tags('players')->flush();
+        });
+        Player::updated(function ($player) {
+            Cache::tags('players')->flush();
+        });
+        Player::deleted(function ($player) {
+            Cache::tags('players')->flush();
+        });
+        Team::created(function ($team) {
+            Cache::tags('teams')->flush();
+        });
+        Team::updated(function ($team) {
+            Cache::tags('teams')->flush();
+        });
+        Team::deleted(function ($team) {
+            Cache::tags('teams')->flush();
+        });
     }
     /**
      * Determine if events and listeners should be automatically discovered.
