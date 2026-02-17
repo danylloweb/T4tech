@@ -7,11 +7,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Log;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
 use Exception;
-use Symfony\Component\Process\Process;
 
 class Controller extends BaseController
 {
@@ -58,39 +54,6 @@ class Controller extends BaseController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function store(Request $request): JsonResponse
-    {
-        try {
-            if ($this->validator) {
-                $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-            }
-            return response()->json($this->service->create($request->all()));
-        } catch (Exception $exception) {
-            return $this->sendBadResponse($exception);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     * @throws ValidatorException
-     */
-    public function update(Request $request, $id): JsonResponse
-    {
-        try {
-            if ($this->validator) {
-                $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-            }
-            return response()->json($this->service->update($request->all(), $id));
-        } catch (Exception $exception) {
-            return $this->sendBadResponse($exception);
-        }
-    }
 
     /**
      * Restore the specified resource from storage.
@@ -140,59 +103,4 @@ class Controller extends BaseController
         }
     }
 
-    /**
-     * @param array $response
-     * @return array
-     */
-    protected function convertPaginationResponse(array $response): array
-    {
-        return [
-            'data' => $response['data'],
-            'meta' => [
-                'pagination' => [
-                    'total' => $response['total'],
-                    'count' => count($response['data']),
-                    'per_page' => $response['per_page'],
-                    'current_page' => $response['current_page'],
-                    'total_pages' => $response['last_page'],
-                    'links' => [
-                        'next' => $response['next_page_url'],
-                    ],
-                ],
-            ],
-        ];
-    }
-    /**
-     * Inicia um processo artisan de forma assíncrona.
-     * Recebe o nome do comando (ex: 'process-tracking-shopee:run') e um array de opções
-     * onde as chaves podem ser sem ou com prefixo ('schedule_id' ou '--schedule_id').
-     * Opções sem valor (flags) devem ser passadas com valor null.
-     *
-     * Ex:
-     *  $this->runArtisanAsync('command:name', ['schedule_id' => 123]);
-     *  $this->runArtisanAsync('command:name', ['--force' => null]);
-     */
-    protected function runArtisanAsync(string $command, array $options = []): void
-    {
-        try {
-            $artisanPath = base_path('artisan');
-            $phpBinary = defined('PHP_BINARY') ? PHP_BINARY : 'php';
-            $processArgs = [$phpBinary, $artisanPath, $command];
-            foreach ($options as $key => $value) {
-                $optionKey = (str_starts_with((string)$key, '-')) ? (string)$key : '--' . (string)$key;
-                if ($value === null) {
-                    $processArgs[] = $optionKey;
-                } else {
-                    $processArgs[] = $optionKey . '=' . (string)$value;
-                }
-            }
-
-            $process = new Process($processArgs);
-            $process->setWorkingDirectory(base_path());
-            $process->setTimeout(null);
-            $process->start();
-        } catch (\Throwable $e) {
-            Log::error("Falha ao iniciar comando [{$command}]: " . $e->getMessage(), ['exception' => $e]);
-        }
-    }
 }

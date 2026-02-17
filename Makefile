@@ -1,4 +1,4 @@
-.PHONY: install up down build recreate ps composer-install migrate seed env-copy fresh bash logs test
+.PHONY: install up down build recreate ps composer-install migrate seed env-copy fresh bash logs test cache-clear restart
 
 install:
 	make env-copy
@@ -7,6 +7,7 @@ install:
 	make composer-install
 	make migrate
 	make seed
+	make restart
 	make ps
 
 up:
@@ -59,3 +60,7 @@ cache-clear:
 	docker-compose run --rm t4tech-api php artisan cache:clear
 	docker-compose run --rm t4tech-api php artisan config:clear
 	docker-compose run --rm t4tech-api php artisan route:clear
+
+restart:
+	docker-compose restart t4tech-api
+	make cache-clear

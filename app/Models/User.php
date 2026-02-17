@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -45,13 +44,27 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
-    public function getJWTIdentifier()
+    /**
+     * Get the user type associated with the user.
+     */
+    public function userType()
     {
-        return $this->getKey();
+        return $this->belongsTo(\App\Entities\UserType::class, 'user_type_id');
     }
 
-    public function getJWTCustomClaims()
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
     {
-        return [];
+        return $this->user_type_id === 1;
+    }
+
+    /**
+     * Check if user can delete
+     */
+    public function canDelete(): bool
+    {
+        return $this->isAdmin();
     }
 }

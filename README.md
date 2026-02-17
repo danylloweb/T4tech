@@ -1,10 +1,14 @@
-# Application Service Omni Hub Api
+# Application T4tech Api
 
 
 ## Setup
 
 Use the make command to start
 
+```bash
+make install
+```
+or
 ```bash
 make up
 ```

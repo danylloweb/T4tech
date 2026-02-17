@@ -35,6 +35,7 @@ class EventServiceProvider extends ServiceProvider
      */
     private function afterCreatedModels()
     {
+
     }
     /**
      * Determine if events and listeners should be automatically discovered.

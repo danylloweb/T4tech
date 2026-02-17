@@ -20,7 +20,11 @@ class RepositoryServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        $this->app->bind(\App\Repositories\ServiceConfigurationRepository::class, \App\Repositories\ServiceConfigurationRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\TeamRepository::class, \App\Repositories\TeamRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\PlayerRepository::class, \App\Repositories\PlayerRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\GameRepository::class, \App\Repositories\GameRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\UserTypeRepository::class, \App\Repositories\UserTypeRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\UserRepository::class, \App\Repositories\UserRepositoryEloquent::class);
         //:end-bindings:
     }
 }
